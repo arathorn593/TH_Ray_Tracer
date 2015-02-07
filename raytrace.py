@@ -1,3 +1,5 @@
+from imports import *
+
 def add_color(color_main, color_to_add, scale):
     for i in xrange(len(color_main):
         color_main[i] += color_to_add * scale
