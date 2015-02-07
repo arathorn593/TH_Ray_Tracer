@@ -1,23 +1,20 @@
-import random
+# functions for writing ppm images
 
-width = 1000
-height = 500
+import numpy as np
 
 def printHeader(imageFile, width, height, intensity=255):
     imageFile.write("P3\n")
-    imageFile.write("%s %s \n" % (str(width), str(height)))
-    imageFile.write("%s\n" % (str(intensity)))
+    imageFile.write("%s %s\n" % (width, height))
+    imageFile.write("%s\n" % (intensity))
 
-
-path = "image.ppm"
-f = open(path, "w")
-
-printHeader(f, width, height)
-
-for row in xrange(width):
-    for col in xrange(height):
-        green = random.randint(0, 255);
-        other = random.randint(0, green);
-        f.write("%s %s %s \n" % (str(other), str(green), str(other)))
-
-f.close();
+def writePPM(array, path="image.ppm"):
+    width = array.shape[0]
+    height = array.shape[1]
+    with open(path, "w") as f:
+        printHeader(f, width, height)
+        for row in xrange(width):
+            for col in xrange(height):
+                red = random.randint(0, 255)
+                green = random.randint(0, 255)
+                blue = random.randint(0, 255)
+                f.write("%i %i %i\n" % (red, green, blue))
