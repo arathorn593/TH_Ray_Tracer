@@ -7,6 +7,8 @@ class Material(object):
 
     def get_color():
         pass
+    
+    self.matte_scale = 1.0
 
 class Matte (Material):
     def __init__ (self, color):
