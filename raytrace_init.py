@@ -1,4 +1,5 @@
 import numpy as np
+from imports import *
 
 def get_object_list():
     object_list = [Sphere ([5., 0., 5.], 1., Matte ([255, 0, 0])), Sphere([0., 5., 5.], 0.5, Matte([0, 255, 0]))]
