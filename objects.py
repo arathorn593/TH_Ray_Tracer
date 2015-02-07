@@ -4,7 +4,7 @@ import math
 
 class PrimativeObject (object):
     def __init__ (self, origin, material):
-        self.center = origin.view()
+        self.center = np.array(origin)
         self.material = material
 
     def does_intersect (incident_dir, incident_ori): pass
@@ -14,7 +14,7 @@ class PrimativeObject (object):
 class InfinitePlane (PrimativeObject):
     def __init__ (self, origin, surface_normal, material):
         super (InfinitePlane, self).__init__ (origin, material)
-        self.surface_normal = surface_normal.view()
+        self.surface_normal = np.array(surface_normal)
 
     def does_intersect (incident_dir, incident_ori):
         incident_dot_normal = np.inner (incident_dir, self.surface_normal)
@@ -31,9 +31,9 @@ class Triangle (PrimativeObject):
     def __init__ (self, pointA, pointB, pointC):
         super (Triangle, self).__init__ (a, material)
 
-        self.a = pointA.view()
-        self.b = pointB.view()
-        self.c = pointC.view()
+        self.a = np.array(pointA)
+        self.b = np.array(pointB)
+        self.c = np.array(pointC)
 
         self.surface_normal = np.cross (pointB - pointA, pointC - pointA)
         self.surface_normal /= la.norm (self.surface_normal, ord=0)
@@ -64,7 +64,7 @@ class Cylinder (PrimativeObject):
     def __init__ (self, center, axis, radius, length, material):
         super (Cylinder, self).__init__ (center, material)
 
-        self.axis = axis.view()
+        self.axis = np.array(axis)
         self.axis /= la.norm (self.axis, ori=0)
 
         self.radius = radius
