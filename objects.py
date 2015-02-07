@@ -7,16 +7,16 @@ class PrimativeObject (object):
         self.center = np.array(origin)
         self.material = material
 
-    def does_intersect (incident_dir, incident_ori): pass
-    def get_surface_normal (incident_dir, incident_ori, distance): pass
-    def get_color (point): pass
+    def does_intersect (self, incident_dir, incident_ori): pass
+    def get_surface_normal (self, incident_dir, incident_ori, distance): pass
+    def get_color (self, point): pass
 
 class InfinitePlane (PrimativeObject):
     def __init__ (self, origin, surface_normal, material):
         super (InfinitePlane, self).__init__ (origin, material)
         self.surface_normal = np.array(surface_normal)
 
-    def does_intersect (incident_dir, incident_ori):
+    def does_intersect (self, incident_dir, incident_ori):
         incident_dot_normal = np.inner (incident_dir, self.surface_normal)
 
         if (abs (incident_dot_normal) > 0.):
@@ -24,7 +24,7 @@ class InfinitePlane (PrimativeObject):
         else:
             return None
 
-    def get_surface_normal (point):
+    def get_surface_normal (self, point):
         return self.surface_normal
 
 class Triangle (PrimativeObject):
@@ -38,11 +38,11 @@ class Triangle (PrimativeObject):
         self.surface_normal = np.cross (pointB - pointA, pointC - pointA)
         self.surface_normal /= la.norm (self.surface_normal, ord=0)
 
-    def get_surface_normal (incident_dir, incident_ori, distance):
+    def get_surface_normal (self, incident_dir, incident_ori, distance):
         if (np.inner (self.b - self.a, incident_dir * distance + incident_ori) > EPSILON): return self.surface_normal
         else: return -self.surface_normal
 
-    def does_intersect (incident_dir, incident_ori):
+    def does_intersect (self, incident_dir, incident_ori):
         p = np.cross (incident_dir, c - a)
         determinant = np.inner (b - a, p)
 
@@ -70,7 +70,7 @@ class Cylinder (PrimativeObject):
         self.radius = radius
         self.length = length
 
-    def get_surface_normal (incident_dir, incident_ori, distance):
+    def get_surface_normal (self, incident_dir, incident_ori, distance):
         intersection_point = incident_dir * distance + incident_ori
 
         if (abs (np.inner (intersection_point - self.center, self.axis)) < EPSILON): return -self.axis
@@ -79,7 +79,7 @@ class Cylinder (PrimativeObject):
             cyl_norm = self.axis * np.inner (self.center - intersection_point, self.axis) - (self.center - intersection_point)
             return cyl_norm / la.norm (cyl_norm, ord=0)
 
-    def doesIntersect (incidentDir, incidentOri):
+    def doesIntersect (self, incidentDir, incidentOri):
         delta_p = incidentOrigin - self.center
         delta_p_dot_axis = np.inner (delta_p, self.axis)
 
@@ -115,12 +115,12 @@ class Sphere (PrimativeObject):
         super (Sphere, self).__init__ (center, material)
         self.radius = radius
 
-    def get_surface_normal (incident_ori, incident_dir, distance):
+    def get_surface_normal (self, incident_ori, incident_dir, distance):
         surface_normal = incident_ori + distance * incident_dir - self.center
 
         return surface_normal / la.norm (surface_normal, ord=0)
 
-    def doesIntersect (incident_ori, incident_dir):
+    def doesIntersect (self, incident_ori, incident_dir):
         solution = None
         delta_p = incident_ori - self.center
 
