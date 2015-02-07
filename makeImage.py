@@ -14,7 +14,7 @@ def writePPM(array, path="image.ppm"):
         printHeader(f, width, height)
         for row in xrange(width):
             for col in xrange(height):
-                red = random.randint(0, 255)
-                green = random.randint(0, 255)
-                blue = random.randint(0, 255)
+                red = array[row][width][0]
+                green = array[row][width][2]
+                blue = array[row][width][3]
                 f.write("%i %i %i\n" % (red, green, blue))
