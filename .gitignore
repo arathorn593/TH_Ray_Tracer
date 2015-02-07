@@ -1,5 +1,5 @@
-# Pickle Files #
-*.p
+# PPM Image Files #
+*.ppm
 
 # Compiled Python Files #
 *.pyc
