@@ -8,7 +8,7 @@ class PrimativeObject:
         self.material = material
 
     def does_intersect (incident_dir, incident_ori): pass
-    def get_surface_normal (t): pass
+    def get_surface_normal (incident_dir, incident_ori, distance): pass
     def get_color (point): pass
 
 class InfinitePlane (PrimativeObject):
@@ -93,4 +93,11 @@ class Cylinder (PrimativeObject):
             solution = (b > 0.) ? -b + math.sqrt (descriminant) / (2. * a) : -b - math.sqrt (descriminant) / (2. * a)
 
             if (solution > 0.):
-                intersection_point = incident_ori + solution * incident_dir
+                intersection_point = incident_ori + solution * incident_dir - (self.center + self.length * self.axis)
+
+                if (np.inner (self.axis, intersection_point) < 0.):
+                    intersection_point = incident_ori + solution * incident_dir - self.center
+
+                    if (np.inner (self.axis, intersection_point) > 0.): shortest_distance = solution
+
+
