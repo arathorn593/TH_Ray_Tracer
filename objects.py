@@ -2,7 +2,7 @@ import numpy as np
 from numpy import linalg as la
 import math
 
-class PrimativeObject:
+class PrimativeObject (object):
     def __init__ (self, origin, material):
         self.center = origin.view()
         self.material = material
@@ -40,7 +40,7 @@ class Triangle (PrimativeObject):
 
     def get_surface_normal (incident_dir, incident_ori, distance):
         if (np.inner (self.b - self.a, incident_dir * distance + incident_ori) > EPSILON): return self.surface_normal
-        else: return -1. * self.surface_normal
+        else: return -self.surface_normal
 
     def does_intersect (incident_dir, incident_ori):
         p = np.cross (incident_dir, c - a)
@@ -73,11 +73,11 @@ class Cylinder (PrimativeObject):
     def get_surface_normal (incident_dir, incident_ori, distance):
         intersection_point = incident_dir * distance + incident_ori
 
-        if (abs (intersection_point - self.center), self.axis) < EPSILON): return -1. * self.axis
-        elif (abs (np.inner (intersection_point - (self.center + self.axis * self.distance), self.axis)) < EPSILON: return self.axis
+        if (abs (np.inner (intersection_point - self.center, self.axis)) < EPSILON): return -self.axis
+        elif (abs (np.inner (intersection_point - (self.center + self.axis * self.distance), self.axis)) < EPSILON): return self.axis
         else:
             cyl_norm = self.axis * np.inner (self.center - intersection_point, self.axis) - (self.center - intersection_point)
-            return cyl_norm / la.norm (cyl_norm, ori=0)
+            return cyl_norm / la.norm (cyl_norm, ord=0)
 
     def doesIntersect (incidentDir, incidentOri):
         delta_p = incidentOrigin - self.center
@@ -90,7 +90,7 @@ class Cylinder (PrimativeObject):
         descriminant = math.pow (b, 2) - 4. * a * c
 
         if (descriminant > 0.):
-            solution = (b > 0.) ? -b + math.sqrt (descriminant) / (2. * a) : -b - math.sqrt (descriminant) / (2. * a)
+            solution = -b + math.sqrt (descriminant) / (2. * a) if (b > 0.) else -b - math.sqrt (descriminant) / (2. * a)
 
             if (solution > 0.):
                 intersection_point = incident_ori + solution * incident_dir - (self.center + self.length * self.axis)
@@ -100,4 +100,36 @@ class Cylinder (PrimativeObject):
 
                     if (np.inner (self.axis, intersection_point) > 0.): shortest_distance = solution
 
+        if (abs (incident_dot_axis) > EPSILON):
+            solution = delta_p_dot_axis / incident_dot_axis
 
+            if (solution > 0. and solution < shortest_distance and np.sum (la.matrix_power (incident_ori + solution * incident_dir - self.center)) < math.pow (self.radius, 2)): shortest_distance = solution
+
+            delta_p = incident_ori - (self.center + length * self.axis)
+            solution = np.inner (delta_p * self.axis) / incident_dot_axis
+
+            if (solution > 0. and solution < shortest_distance and np.sum (la.matrix_power (incident_ori + solution * incident_dir - self.center)) < math.pow (self.radius, 2)): shortest_distance = solution
+
+class Sphere (PrimativeObject):
+    def __init__ (self, center, radius, material):
+        super (Sphere, self).__init__ (center, material)
+        self.radius = radius
+
+    def get_surface_normal (incident_ori, incident_dir, distance):
+        surface_normal = incident_ori + distance * incident_dir - self.center
+
+        return surface_normal / la.norm (surface_normal, ord=0)
+
+    def doesIntersect (incident_ori, incident_dir):
+        solution = None
+        delta_p = incident_ori - self.center
+
+        a = np.inner (incident_dir, incident_dir)
+        b = 2. * np.inner (incident_dir, delta_p)
+        c = np.inner (delta_p, delta_p) - math.pow (self.radius, 2)
+        descriminant = math.pow (b, 2) - 4. * a * c
+
+        if (descriminant > 0.):
+            solution = -b + math.sqrt (descriminant) / (2. * a) if (b > 0.) else -b - math.sqrt (descriminant) / (2. * a)
+
+        return solution
