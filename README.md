@@ -1,3 +1,3 @@
-# TH_Ray_Tracer
+Ray Tracer
 ---------------
 Ray Tracer built at Tartan Hacks
