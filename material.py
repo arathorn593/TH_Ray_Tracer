@@ -6,7 +6,7 @@ class Material(object):
         self.color = color
         self.matte_scale = 1.0
 
-    def get_color():
+    def get_color(self):
         pass
 
 class Matte (Material):
