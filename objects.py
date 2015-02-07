@@ -2,7 +2,7 @@ import numpy as np
 from numpy import linalg as la
 import math
 
-class PrimativeObject:
+class PrimativeObject (object):
     def __init__ (self, origin, material):
         self.center = origin.view()
         self.material = material
